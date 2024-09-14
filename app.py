@@ -4,13 +4,11 @@ from torch import multiprocessing
 import plotly.express as px
 from pathlib import Path
 import pathlib
-temp = pathlib.PosixPath
-pathlib.PosixPath = pathlib.WindowsPath
+import platform
 
-
-# Ensure compatibility with the WindowsPath for fastai models
-temp = pathlib.PosixPath
-pathlib.PosixPath = pathlib.WindowsPath
+# Ensure compatibility with WindowsPath for fastai models only if on Windows
+if platform.system() == 'Windows':
+    pathlib.PosixPath = pathlib.WindowsPath
 
 # Title
 st.title("Transportni klassifikatsiya qiluvchi model")
@@ -34,9 +32,9 @@ if file is not None:
     # Show the prediction result
     st.success(f"Prediction: {pred}")
     st.info(f"Probability: {probs[pred_id] * 100:.1f}%")
+
+    # Plotting
+    fig = px.bar(x=probs * 100, y=model.dls.vocab, labels={'x': 'Probability (%)', 'y': 'Category'})
+    st.plotly_chart(fig)
 else:
     st.info("Iltimos, rasm yuklang.")
-
-# Plotting
-fig = px.bar(x=probs * 100, y=model.dls.vocab)
-st.plotly_chart(fig)
