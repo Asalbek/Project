@@ -3,8 +3,8 @@ from fastai.vision.all import PILImage, load_learner
 from torch import multiprocessing
 import pathlib
 import plotly.express as px
-plt=platform.system()
-if plt=='Linux': pathlib.WindowsPath=pathlib.Posix.Path
+temp = pathlib.PosixPath
+pathlib.PosixPath = pathlib.WindowsPath
 
 # Ensure compatibility with the WindowsPath for fastai models
 temp = pathlib.PosixPath
